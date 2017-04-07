@@ -4,6 +4,7 @@ from threading import Thread
 
 class ClientHandler(Thread):
     def __init__(self, cs, address):
+        Thread.__init__(self)
         self.cs = cs
         self.address = address
         self.cs.setblocking(0)
@@ -12,7 +13,7 @@ class ClientHandler(Thread):
         while 1:
             try:
                 data = self.cs.recv(512)
-                print str(address(0)) + data
+                print address[0] + " > " + data
             except socket.error:
                 '''nothing'''
 
@@ -30,4 +31,5 @@ while 1:
     client_socket.sendall("hello, world!")
     print "client found"
     ch = ClientHandler(client_socket, address)
-    ch.run()
+    print "client connected"
+    ch.start()
