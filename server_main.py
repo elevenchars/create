@@ -33,3 +33,4 @@ while 1:
     ch = ClientHandler(client_socket, address)
     print "client connected"
     ch.start()
+    print "client thread started"
