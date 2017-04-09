@@ -9,6 +9,7 @@ class ClientHandler(Thread):
         Thread.__init__(self)
         self.cs = cs
         self.address = address
+        self.confirmed = False
         self.cs.setblocking(0)
 
     def recvall(self, sock, buff):
@@ -24,13 +25,22 @@ class ClientHandler(Thread):
     def run(self):
         while 1:
             try:
-                msg = self.recvall(self.cs, 1024)
-                print address[0] + " > " + msg
+                msg = json.load(self.recvall(self.cs, 1024))
+                if (not self.confirmed):
+                    if ("type" in msg and "body" in msg):
+                        if (msg["type"] == "status" and msg["body"] == "newconn"):
+                            self.cs.sendall(json.dump({"type": "status",
+                                                       "body": "confirm"}))
+                else:
+                    print address[0] + " > " + msg
+                    send_to_clients(msg)
             except socket.error:
                 '''nothing'''
 
 
-
+def send_to_clients(msg):
+    for client in clients:
+        client.cs.sendall(json.dump(msg))
 
 clients = []
 

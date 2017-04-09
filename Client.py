@@ -3,6 +3,8 @@ import socket
 import json
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+
 def connect(ip, port):
     s.connect((ip, port))
     s.sendall(json.dump({"type" : "status",
@@ -13,6 +15,7 @@ def connect(ip, port):
             return True
     else:
         return False
+
 
 def recvall(sock, buff):
     data = ""
