@@ -35,7 +35,7 @@ class ClientHandler(Thread):
                     print address[0] + " > " + msg
                     send_to_clients(msg)
             except socket.error:
-                '''nothing'''
+                '''do nothing'''
 
 
 def send_to_clients(msg):
