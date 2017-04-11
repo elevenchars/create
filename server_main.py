@@ -25,12 +25,13 @@ class ClientHandler(Thread):
     def run(self):
         while 1:
             try:
-                msg = json.load(self.recvall(self.cs, 1024))
+                msg = json.loads(self.recvall(self.cs, 1024))
                 if (not self.confirmed):
                     if ("type" in msg and "body" in msg):
                         if (msg["type"] == "status" and msg["body"] == "newconn"):
-                            self.cs.sendall(json.dump({"type": "status",
+                            self.cs.sendall(json.dumps({"type": "status",
                                                        "body": "confirm"}))
+                            print "client connected and confirmed"
                 else:
                     print address[0] + " > " + msg
                     send_to_clients(msg)
@@ -40,7 +41,7 @@ class ClientHandler(Thread):
 
 def send_to_clients(msg):
     for client in clients:
-        client.cs.sendall(json.dump(msg))
+        client.cs.sendall(json.dumps(msg))
 
 clients = []
 
@@ -54,7 +55,6 @@ print "server started on " + socket.gethostbyname(socket.gethostname()) + ", " +
 while 1:
     print "looking for client"
     client_socket, address = s.accept()
-    client_socket.sendall("hello, world!")
     print "client found"
     ch = ClientHandler(client_socket, address)
     ch.start()
