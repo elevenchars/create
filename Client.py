@@ -2,19 +2,20 @@ from threading import Thread
 import socket
 import json
 
-__s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 
-def connect(ip, port):
-    __s.connect((ip, port))
-    __s.sendall(json.dump({"type" : "status",
+def connect(ip, port):  # attempt to connect to server, returns True if connection is successful
+    s.connect((ip, port))
+    s.sendall(json.dumps({"type" : "status",
                          "body" : "newconn"}))
-    resp = json.load(recvall(__s))
+    resp = json.loads(recvall(s, 1024))
     if("type" in resp and "body" in resp):
         if(resp["type"] == "status" and resp["body"] == "confirm"):
             return True
     else:
         return False
+
 
 def recvall(sock, buff):
     data = ""
@@ -27,8 +28,8 @@ def recvall(sock, buff):
     return data
 
 
-def send(sock, content):
-    sock.sendall(content)
+def send(content):
+    s.sendall(json.dumps(content))
 
 
 class ServerListener(Thread):  # class to receive messages from server, must connect first
@@ -38,7 +39,8 @@ class ServerListener(Thread):  # class to receive messages from server, must con
 
     def run(self):
         while 1:
-            content = json.load(recvall(__s, 1024))
+            print "looking for message!"
+            content = json.loads(recvall(s, 1024))
             if(type in content):
                 if(content["type"] == "message"):
                     self.callback(content)
