@@ -32,8 +32,9 @@ class ClientHandler(Thread):
                             self.cs.sendall(json.dumps({"type": "status",
                                                        "body": "confirm"}))
                             print "client connected and confirmed"
+                            self.confirmed = True
                 else:
-                    print address[0] + " > " + msg
+                    print address[0] + " > " + str(msg)
                     send_to_clients(msg)
             except socket.error:
                 '''do nothing'''
