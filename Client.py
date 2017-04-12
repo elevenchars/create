@@ -5,10 +5,11 @@ import json
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 
-def connect(ip, port):  # attempt to connect to server, returns True if connection is successful
+def connect(ip, port, name):  # attempt to connect to server, returns True if connection is successful
     s.connect((ip, port))
     s.sendall(json.dumps({"type" : "status",
-                         "body" : "newconn"}))
+                         "body" : "newconn",
+                          "name" : name}))
     resp = json.loads(recvall(s, 1024))
     if("type" in resp and "body" in resp):
         if(resp["type"] == "status" and resp["body"] == "confirm"):
@@ -26,6 +27,8 @@ def recvall(sock, buff):
         if len(part) < buff:
             break  # exit loop on last part of message
     return data
+
+print "hi"
 
 
 def send(content):
