@@ -28,12 +28,17 @@ class ClientHandler(Thread):
             try:
                 msg = json.loads(self.recvall(self.cs, 1024))
                 if (not self.confirmed):
-                    if ("type" in msg and "body" in msg):
-                        if (msg["type"] == "status" and msg["body"] == "newconn"):
+                    if ("type" in msg and "body" in msg and "name" in msg):
+                        if (msg["type"] == "status" and msg["body"] == "newconn" and not name_in_use(msg["name"])):
                             self.cs.sendall(json.dumps({"type": "status",
                                                        "body": "confirm"}))
                             print "client connected and confirmed"
                             self.confirmed = True
+                            self.name = msg["name"]
+                        else:
+                            print "found client, but name is already in use"
+                            self.cs.sendall(json.dumps({"type": "status",
+                                                        "body": "name in use"}))
                 else:
                     print address[0] + " > " + str(msg)
                     send_to_clients(msg)
@@ -44,6 +49,13 @@ class ClientHandler(Thread):
 def send_to_clients(msg):
     for client in clients:
         client.cs.sendall(json.dumps(msg))
+
+
+def name_in_use(name):
+    for client in clients:
+        if(name == client.name):
+            return True
+    return False
 
 clients = []
 
