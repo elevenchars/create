@@ -10,6 +10,7 @@ class ClientHandler(Thread):
         self.cs = cs
         self.address = address
         self.confirmed = False
+        self.name = ""
         self.cs.setblocking(0)
 
     def recvall(self, sock, buff):
