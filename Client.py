@@ -15,6 +15,7 @@ def connect(ip, port, name):  # attempt to connect to server, returns True if co
         if(resp["type"] == "status" and resp["body"] == "confirm"):
             return True
     else:
+        s.close()
         return False
 
 
@@ -27,8 +28,6 @@ def recvall(sock, buff):
         if len(part) < buff:
             break  # exit loop on last part of message
     return data
-
-print "hi"
 
 
 def send(content):
