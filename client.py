@@ -3,6 +3,7 @@ import socket
 import json
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
 
 def connect(ip, port, name):  # attempt to connect to server, returns True if connection is successful
@@ -41,7 +42,6 @@ class ServerListener(Thread):  # class to receive messages from server, must con
 
     def run(self):
         while 1:
-            print "looking for message!"
             content = json.loads(recvall(s, 1024))
             if(type in content):
                 if(content["type"] == "message"):
