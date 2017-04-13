@@ -47,8 +47,13 @@ class ClientHandler(Thread):
 
 
 def send_to_clients(msg):
-    for client in clients:
-        client.cs.sendall(json.dumps(msg))
+    for client in clients[:]:
+        try:
+            client.cs.sendall(json.dumps(msg))
+        except socket.error, e:
+            if e.errno == socket.errno.ECONNRESET:
+                print "socket killed! removing from list"
+                clients.remove(client)
 
 
 def name_in_use(name):
