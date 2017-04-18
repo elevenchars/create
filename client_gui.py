@@ -6,6 +6,8 @@ import re
 
 class MainApplication(tk.Frame):
     def __init__(self, parent):
+        self.msgs = ""
+
         tk.Frame.__init__(self, parent)
         self.parent = parent
         self.parent.title("chat")
@@ -23,12 +25,21 @@ class MainApplication(tk.Frame):
         self.inputFrame = tk.Frame(self)
         self.textField = tk.Entry(self.inputFrame)
         self.submitButton = tk.Button(self.inputFrame, name="send")
+
         self.create_widgets()
+
+        self.update_messages("hello world")
+
+        self.msgs += "\n HELLO WORLD"
 
     def create_widgets(self):
         self.editArea.grid(sticky=tk.W+tk.E)
         self.editArea.config(state=tk.DISABLED)
         self.quitButton.grid(ipadx=500)
+
+    def update_messages(self, content):
+        self.editArea.insert(tk.INSERT, content)
+        self.editArea.grid(sticky=tk.W + tk.E)
 
 
 class ServerDialog(tk.Frame):
