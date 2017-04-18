@@ -6,7 +6,7 @@ def response_printer(resp):
 
 success = False
 while(not success):
-    ip = raw_input("please enter the server IP: ")
+    ip = raw_input("please enter the server IP: h")
     port = int(raw_input("please enter the server port: "))
     name = raw_input("please enter your username: ")
     success = client.connect(ip, port, name)
