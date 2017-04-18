@@ -19,6 +19,10 @@ class MainApplication(tk.Frame):
             width=20,
             height=10
         )
+
+        self.inputFrame = tk.Frame(self)
+        self.textField = tk.Entry(self.inputFrame)
+        self.submitButton = tk.Button(self.inputFrame, name="send")
         self.create_widgets()
 
     def create_widgets(self):
@@ -86,4 +90,4 @@ dialog.mainloop()
 
 # app = MainApplication()
 # app.mainloop()
-#TODO: make MainApplication work lol
+# TODO: make MainApplication work lol
