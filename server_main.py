@@ -11,12 +11,14 @@ class ClientHandler(Thread):
         self.address = address
         self.confirmed = False
         self.name = ""
-        self.cs.setblocking(0)
+        self.cs.setblocking(1)
 
     def recvall(self, sock, buff):
         data = ""
         while 1:
             part = sock.recv(buff)
+            if(part == ""):
+                break
             data += part
             print part
             if len(part) < buff:
@@ -42,8 +44,8 @@ class ClientHandler(Thread):
                 else:
                     print address[0] + " > " + str(msg)
                     send_to_clients(msg)
-            except socket.error:
-                '''do nothing'''
+            except (socket.error, Exception) as e:
+                """nothing"""
 
 
 def send_to_clients(msg):
