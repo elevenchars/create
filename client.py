@@ -7,17 +7,22 @@ s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
 
 def connect(ip, port, name):  # attempt to connect to server, returns True if connection is successful
-    s.connect((ip, port))
-    s.sendall(json.dumps({"type" : "status",
-                         "body" : "newconn",
-                          "name" : name}))
-    resp = json.loads(recvall(s, 1024))
-    if("type" in resp and "body" in resp):
-        if(resp["type"] == "status" and resp["body"] == "confirm"):
-            return True
-    else:
-        s.close()
+    try:
+        s.connect((ip, port))
+        s.sendall(json.dumps({"type": "status",
+                              "body": "newconn",
+                              "name": name}))
+        resp = json.loads(recvall(s, 1024))
+        if ("type" in resp and "body" in resp):
+            if (resp["type"] == "status" and resp["body"] == "confirm"):
+                return True
+        else:
+            s.close()
+            return False
+    except (socket.timeout, Exception) as e:
+        print e
         return False
+
 
 
 def recvall(sock, buff):
