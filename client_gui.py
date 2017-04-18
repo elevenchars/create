@@ -1,6 +1,6 @@
 import Tkinter as tk
 import client
-
+import re
 
 class MainApplication(tk.Frame):
     def __init__(self, master=None):
@@ -42,7 +42,17 @@ class ServerDialog(tk.Frame):
 
     def connect(self):
         print "attempting connection to " + self.ip_field.get() + ":" + self.port_field.get()
-        client.connect(self.ip_field.get(), int(self.port_field.get()),self.name_field.get())
+        if(client.connect(self.ip_field.get(), int(self.port_field.get()),self.name_field.get())):
+            app = MainApplication()
+            app.mainloop()
+        else:
+            print "connection failed"
+            self.destroy()
+
+
+    def validate(self):
+        ipPattern = re.compile("(\d{1,3}\.?){4}")
+
 dialog = ServerDialog(None)
 dialog.mainloop()
 
