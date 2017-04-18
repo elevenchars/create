@@ -4,6 +4,7 @@ import ScrolledText
 import client
 import re
 
+
 class MainApplication(tk.Frame):
     def __init__(self, parent):
         self.msgs = ""
@@ -30,16 +31,15 @@ class MainApplication(tk.Frame):
 
         self.update_messages("hello world")
 
-        self.msgs += "\n HELLO WORLD"
-
     def create_widgets(self):
         self.editArea.grid(sticky=tk.W+tk.E)
         self.editArea.config(state=tk.DISABLED)
         self.quitButton.grid(ipadx=500)
 
     def update_messages(self, content):
-        self.editArea.insert(tk.INSERT, content)
-        self.editArea.grid(sticky=tk.W + tk.E)
+        self.editArea.config(state=tk.NORMAL)
+        self.editArea.insert(tk.END, content)
+        self.editArea.config(state=tk.DISABLED)
 
 
 class ServerDialog(tk.Frame):
