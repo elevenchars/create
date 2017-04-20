@@ -40,7 +40,7 @@ class MainApplication(tk.Frame):
 
     def update_messages(self, content):
         self.editArea.config(state=tk.NORMAL)
-        self.editArea.insert(tk.END, content["name"] + " > " + content["body"])
+        self.editArea.insert(tk.END, content["name"] + " > " + content["body"] + "\n")
         self.editArea.config(state=tk.DISABLED)
 
     def send_message(self):
@@ -90,6 +90,8 @@ class ServerDialog(tk.Frame):
             else:
                 print "connection failed"
                 tkMessageBox.showerror("error!", "connection failed")
+                client.s.close()
+                client.recreate_socket()
         else:
             tkMessageBox.showerror("error!", "invalid port or ip address")
 
@@ -102,6 +104,8 @@ class ServerDialog(tk.Frame):
         return False
 
 root = tk.Tk()
+root.rowconfigure(0, weight=1)
+root.columnconfigure(0, weight=1)
 dialog = ServerDialog(root)
 dialog.mainloop()
 
