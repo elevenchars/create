@@ -42,7 +42,8 @@ class ClientHandler(Thread):
                             self.cs.sendall(json.dumps({"type": "status",
                                                         "body": "name in use"}))
                 else:
-                    print address[0] + " > " + str(msg)
+                    print self.name + " > " + msg["body"]
+                    msg["name"] = self.name
                     send_to_clients(msg)
             except (socket.error, Exception) as e:
                 """nothing"""
