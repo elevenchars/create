@@ -7,12 +7,11 @@ import re
 
 class MainApplication(tk.Frame):
     def __init__(self, parent):
-        self.msgs = ""
-
         tk.Frame.__init__(self, parent)
         self.parent = parent
         self.parent.title("chat")
         self.parent.iconbitmap("gray75")
+        self.parent.resizable(True, True)
 
         self.grid()
         self.quitButton = tk.Button(self, text="QUIT", command=self.quit)
@@ -25,11 +24,11 @@ class MainApplication(tk.Frame):
 
         self.inputFrame = tk.Frame(self)
         self.textField = tk.Entry(self.inputFrame)
-        self.submitButton = tk.Button(self.inputFrame, text="send")
+        self.submitButton = tk.Button(self.inputFrame, text="send", command=self.send_message)
 
+        listener = client.ServerListener(self.update_messages)
+        listener.start()
         self.create_widgets()
-
-        self.update_messages("hello world")
 
     def create_widgets(self):
         self.editArea.grid(sticky=tk.W+tk.E)
@@ -41,8 +40,13 @@ class MainApplication(tk.Frame):
 
     def update_messages(self, content):
         self.editArea.config(state=tk.NORMAL)
-        self.editArea.insert(tk.END, content)
+        self.editArea.insert(tk.END, content["name"] + " > " + content["body"])
         self.editArea.config(state=tk.DISABLED)
+
+    def send_message(self):
+        client.send({"type" : "message",
+                     "body" : self.textField.get()})
+        self.textField.delete(0, tk.END)
 
 
 class ServerDialog(tk.Frame):
@@ -79,7 +83,6 @@ class ServerDialog(tk.Frame):
     def connect(self):
         print "attempting connection to " + self.ip_field.get() + ":" + self.port_field.get()
         if(self.validate(self.ip_field.get(), self.port_field.get())):
-
             if(client.connect(self.ip_field.get(), int(self.port_field.get()),self.name_field.get())):
                 self.destroy()
                 app = MainApplication(self.parent)
@@ -104,4 +107,3 @@ dialog.mainloop()
 
 # app = MainApplication()
 # app.mainloop()
-# TODO: make MainApplication work lol
