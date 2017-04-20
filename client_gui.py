@@ -90,7 +90,6 @@ class ServerDialog(tk.Frame):
             else:
                 print "connection failed"
                 tkMessageBox.showerror("error!", "connection failed")
-                client.s.close()
                 client.recreate_socket()
         else:
             tkMessageBox.showerror("error!", "invalid port or ip address")
