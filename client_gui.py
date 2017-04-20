@@ -34,7 +34,10 @@ class MainApplication(tk.Frame):
     def create_widgets(self):
         self.editArea.grid(sticky=tk.W+tk.E)
         self.editArea.config(state=tk.DISABLED)
-        self.quitButton.grid(ipadx=500)
+
+        self.textField.grid(row=0,sticky=tk.W)
+        self.submitButton.grid(row=1, sticky=tk.E)
+        self.inputFrame.grid(sticky=tk.S)
 
     def update_messages(self, content):
         self.editArea.config(state=tk.NORMAL)
