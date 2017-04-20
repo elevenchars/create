@@ -25,7 +25,7 @@ class MainApplication(tk.Frame):
 
         self.inputFrame = tk.Frame(self)
         self.textField = tk.Entry(self.inputFrame)
-        self.submitButton = tk.Button(self.inputFrame, name="send")
+        self.submitButton = tk.Button(self.inputFrame, text="send")
 
         self.create_widgets()
 
@@ -35,8 +35,8 @@ class MainApplication(tk.Frame):
         self.editArea.grid(sticky=tk.W+tk.E)
         self.editArea.config(state=tk.DISABLED)
 
-        self.textField.grid(row=0,sticky=tk.W)
-        self.submitButton.grid(row=1, sticky=tk.E)
+        self.textField.grid(row=0, column=0, sticky=tk.W)
+        self.submitButton.grid(row=0, column=1, sticky=tk.E)
         self.inputFrame.grid(sticky=tk.S)
 
     def update_messages(self, content):
