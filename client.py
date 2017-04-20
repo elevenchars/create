@@ -24,13 +24,13 @@ def connect(ip, port, name):  # attempt to connect to server, returns True if co
         return False
 
 
-
 def recvall(sock, buff):
     data = ""
     while 1:
         part = sock.recv(buff)
+        if (part == ""):
+            break
         data += part
-        print part
         if len(part) < buff:
             break  # exit loop on last part of message
     return data
@@ -48,6 +48,9 @@ class ServerListener(Thread):  # class to receive messages from server, must con
     def run(self):
         while 1:
             content = json.loads(recvall(s, 1024))
-            if(type in content):
+            print "content found"
+            print content
+            if("type" in content):
                 if(content["type"] == "message"):
+                    print "callback"
                     self.callback(content)
