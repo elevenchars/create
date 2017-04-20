@@ -5,6 +5,12 @@ import json
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
+9
+def recreate_socket():
+    global s
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+
 
 def connect(ip, port, name):  # attempt to connect to server, returns True if connection is successful
     try:
