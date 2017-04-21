@@ -3,10 +3,10 @@ import socket
 import json
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) # create initial socket
 
-9
-def recreate_socket():
+
+def recreate_socket(): # used to recreate socket if connection fails, determined in implementation
     global s
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -22,15 +22,15 @@ def connect(ip, port, name):  # attempt to connect to server, returns True if co
         if ("type" in resp and "body" in resp):
             if (resp["type"] == "status" and resp["body"] == "confirm"):
                 return True
-        else:
+        else:  # close connection if response is malformed
             s.close()
             return False
-    except (socket.timeout, Exception) as e:
+    except (socket.timeout, Exception) as e:  # if server doesn't respond, return False
         print e
         return False
 
 
-def recvall(sock, buff):
+def recvall(sock, buff):  # ensure that all data is received from socket
     data = ""
     while 1:
         part = sock.recv(buff)
@@ -42,7 +42,7 @@ def recvall(sock, buff):
     return data
 
 
-def send(content):
+def send(content):  # send json object to server
     s.sendall(json.dumps(content))
 
 
@@ -51,12 +51,9 @@ class ServerListener(Thread):  # class to receive messages from server, must con
         Thread.__init__(self)
         self.callback = callback
 
-    def run(self):
+    def run(self):  # main loop
         while 1:
-            content = json.loads(recvall(s, 1024))
-            print "content found"
-            print content
+            content = json.loads(recvall(s, 1024))  # get content
             if("type" in content):
                 if(content["type"] == "message"):
-                    print "callback"
-                    self.callback(content)
+                    self.callback(content)  # send message to client to display
