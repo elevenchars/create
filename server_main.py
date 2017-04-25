@@ -12,6 +12,7 @@ class ClientHandler(Thread):
         self.confirmed = False
         self.name = ""
         self.cs.setblocking(1)
+        self.stopped = False
 
     def recvall(self, sock, buff):  # make sure all data is received
         data = ""
@@ -26,7 +27,7 @@ class ClientHandler(Thread):
         return data
 
     def run(self):  # main loop
-        while 1:
+        while not self.stopped:
             try:
                 msg = json.loads(self.recvall(self.cs, 1024))  # load message from client
                 if (not self.confirmed):  # confirmation process, make sure it is actually a client and name is unique
@@ -46,7 +47,12 @@ class ClientHandler(Thread):
                     msg["name"] = self.name
                     send_to_clients(msg)
             except (socket.error, Exception) as e:
-                """nothing"""
+                clients.remove(self)
+                self.stop()
+        print "STOPPED " + self.name + " THREAD"
+
+    def stop(self):
+        self.stopped = True
 
 
 def send_to_clients(msg):  # send message to all clients, and remove disconnected clients if necessary
@@ -56,6 +62,7 @@ def send_to_clients(msg):  # send message to all clients, and remove disconnecte
         except socket.error, e:
             if e.errno == socket.errno.ECONNRESET:
                 print "socket killed! removing from list"
+                client.stop()
                 clients.remove(client)
 
 
