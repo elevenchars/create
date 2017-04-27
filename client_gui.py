@@ -13,7 +13,7 @@ class ChatWindow(tk.Frame):  # chat window, runs after dialog has prompted user 
         self.parent.iconbitmap("gray75")
         self.parent.resizable(True, True)
 
-        self.grid()  # create widgets
+        self.grid(sticky=tk.N+tk.S+tk.E+tk.W)  # create widgets
         self.quitButton = tk.Button(self, text="QUIT", command=self.quit)
         self.editArea = ScrolledText.ScrolledText(
             master=self,
@@ -30,15 +30,18 @@ class ChatWindow(tk.Frame):  # chat window, runs after dialog has prompted user 
         self.create_widgets()  # add widgets to the window
 
     def create_widgets(self):
-        self.editArea.grid(sticky=tk.W+tk.E)  # place chat content window and set it to uneditable
+        self.editArea.grid(sticky=tk.N+tk.S+tk.E+tk.W)  # place chat content window and set it to uneditable
         self.editArea.config(state=tk.DISABLED)
         self.textField.grid(row=0, column=0, sticky=tk.W)  # create bottom bar
         self.submitButton.grid(row=0, column=1, sticky=tk.E)
-        self.inputFrame.grid(sticky=tk.S)
+        self.inputFrame.grid(sticky=tk.N+tk.S+tk.E+tk.W)
 
     def update_messages(self, content):  # make content window editable, modify, and set to uneditable
         self.editArea.config(state=tk.NORMAL)
-        self.editArea.insert(tk.END, content["name"] + " > " + content["body"] + "\n")
+        if("name" in content):
+            self.editArea.insert(tk.END, content["name"] + " > " + content["body"] + "\n")
+        else:
+            self.editArea.insert(tk.END, content["body"] + "\n")
         self.editArea.config(state=tk.DISABLED)
 
     def send_message(self):  # send message to server if not blank
