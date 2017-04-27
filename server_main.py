@@ -17,19 +17,21 @@ class ClientHandler(Thread):
         self.cs.setblocking(1)
         self.stopped = False
         self.commands = []
+        self.populate_commands()
 
     def populate_commands(self):
         for command_name in plugins.__all__:
             self.commands.append(getattr(plugins, command_name).Command(self))
 
     def is_command(self, message):
-        if (message.startsWith("/")):
+        if (message.startswith("/")):
             return True
         return False
 
     def find_command(self, message):
         for command in self.commands:
-            if message.split(" ")[:1] == command.get_command():
+            print command.get_command()
+            if message.split(" ")[0] == command.get_command():
                 return command
         return None
 
@@ -68,11 +70,12 @@ class ClientHandler(Thread):
                     print self.name + " > " + msg["body"]
                     msg["name"] = self.name
                     print msg["body"]
-                    if(self.is_command(msg["body"])):
+                    if(self.is_command(str(msg["body"]))):
                         print "command found"
-                        current = self.find_command(msg["body"])
+                        current = self.find_command(str(msg["body"]))
+                        print current
                         if(current):
-                            current.execute(msg["body"])
+                            current.execute(str(msg["body"]))
                         else:
                             self.cs.sendall(json.dumps({"type": "message",
                                                         "body": "sorry, command not found"}))
