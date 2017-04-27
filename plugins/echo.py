@@ -6,5 +6,5 @@ class Command(_command.Command):
         _command.Command.__init__(self, client_handler, "echo", self.command)
 
     def command(self, args):
-        self.client_handler.sendall(json.dumps({"type": "message",
+        self.client_handler.cs.sendall(json.dumps({"type": "message",
                                                 "body": "ECHO : " + str(args)}))
