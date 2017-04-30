@@ -29,10 +29,11 @@ class ClientHandler(Thread):
         return False
 
     def find_command(self, message):  # find command that matches the input string
-        for command in self.commands:
-            print command.get_command()
-            if message.split(" ")[0] == command.get_command():
-                return command
+        if (self.is_command(message)):
+            for command in self.commands:
+                print command.get_command()
+                if message.split(" ")[0] == command.get_command():
+                    return command
         return None
 
     def recvall(self, sock, buff):  # make sure all data is received
