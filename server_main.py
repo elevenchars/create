@@ -8,7 +8,7 @@ from plugins import *
 
 # handler to receive data from client class
 class ClientHandler(Thread):
-    def __init__(self, cs, address):
+    def __init__(self, cs, address):  # initialize instance variables
         Thread.__init__(self)
         self.cs = cs
         self.address = address
@@ -19,16 +19,16 @@ class ClientHandler(Thread):
         self.commands = []
         self.populate_commands()
 
-    def populate_commands(self):
+    def populate_commands(self):  # import all commands in plugins package
         for command_name in plugins.__all__:
             self.commands.append(getattr(plugins, command_name).Command(self))
 
-    def is_command(self, message):
+    def is_command(self, message):  # determine if input string matches the format
         if (message.startswith("/")):
             return True
         return False
 
-    def find_command(self, message):
+    def find_command(self, message):  # find command that matches the input string
         for command in self.commands:
             print command.get_command()
             if message.split(" ")[0] == command.get_command():
@@ -47,7 +47,7 @@ class ClientHandler(Thread):
                 break  # exit loop on last part of message
         return data
 
-    def send_to_all(self, msg):
+    def send_to_all(self, msg):  # wrapper method so Command classes can access send_to_clients
         send_to_clients(msg)
 
     def run(self):  # main loop
@@ -70,24 +70,22 @@ class ClientHandler(Thread):
                     print self.name + " > " + msg["body"]
                     msg["name"] = self.name
                     print msg["body"]
-                    if(self.is_command(str(msg["body"]))):
-                        print "command found"
+                    if(self.is_command(str(msg["body"]))):  # parse command
                         current = self.find_command(str(msg["body"]))
-                        print current
-                        if(current):
-                            current.execute(str(msg["body"]))
+                        if(current):  # if command is in plugins
+                            current.execute(str(msg["body"]))  # execute the command
                         else:
-                            self.cs.sendall(json.dumps({"type": "message",
+                            self.cs.sendall(json.dumps({"type": "message",  # command not found, so send error message to client
                                                         "body": "sorry, command not found"}))
                     else:
                         send_to_clients(msg)
-            except (socket.error, Exception) as e:
+            except (socket.error, Exception) as e:  # print errors for debugging, kill thread
                 print self.name + " !! " + str(e)
                 clients.remove(self)
                 self.stop()
         print "STOPPED " + self.name + " THREAD"
 
-    def stop(self):
+    def stop(self):  # stop while loop to kill thread
         self.stopped = True
 
 
