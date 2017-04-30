@@ -38,7 +38,7 @@ class ChatWindow(tk.Frame):  # chat window, runs after dialog has prompted user 
 
     def update_messages(self, content):  # make content window editable, modify, and set to uneditable
         self.editArea.config(state=tk.NORMAL)
-        if("name" in content):
+        if("name" in content):  # do formatting for command vs chat message
             self.editArea.insert(tk.END, content["name"] + " > " + content["body"] + "\n")
         else:
             self.editArea.insert(tk.END, content["body"] + "\n")
@@ -61,7 +61,7 @@ class ServerDialog(tk.Frame):  # dialog for getting input from user and connecti
         self.parent.title("connect")
         self.parent.iconbitmap("gray12")
 
-        self.ip_label = tk.Label(self, text="IP address")  #create widgets
+        self.ip_label = tk.Label(self, text="IP address")  # create widgets
         self.ip_field = tk.Entry(self)
         self.port_label = tk.Label(self, text="Port")
         self.port_field = tk.Entry(self)
@@ -105,7 +105,7 @@ class ServerDialog(tk.Frame):  # dialog for getting input from user and connecti
             return True
         return False
 
-root = tk.Tk()
+root = tk.Tk()  # start root menu and configure
 root.rowconfigure(0, weight=1)
 root.columnconfigure(0, weight=1)
 dialog = ServerDialog(root)
